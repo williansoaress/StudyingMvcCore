@@ -14,6 +14,7 @@ namespace StudyingMvcCore.App.AutoMapper
         {
             CreateMap<Customer, CustomerViewModel>().ReverseMap();
             CreateMap<ToDo, ToDoViewModel>().ReverseMap();
+            CreateMap<Address, AddressViewModel>().ReverseMap();
         }
     }
 }

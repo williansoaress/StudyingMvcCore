@@ -28,6 +28,10 @@ namespace StudyingMvcCore.Data.Mappgins
                 .HasMany(c => c.ToDos)
                 .WithOne(t => t.Customer)
                 .HasForeignKey(t => t.CustomerId);
+
+            builder
+                .HasOne(c => c.Address)
+                .WithOne(a => a.Customer);
         }
     }
 }

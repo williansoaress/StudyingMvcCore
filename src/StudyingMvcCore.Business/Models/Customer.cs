@@ -10,5 +10,6 @@ namespace StudyingMvcCore.Business.Models
 
         /*EF Relation*/
         public IEnumerable<ToDo> ToDos { get; set; }
+        public Address Address { get; set; }
     }
 }

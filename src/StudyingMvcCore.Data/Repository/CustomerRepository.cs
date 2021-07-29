@@ -17,5 +17,20 @@ namespace StudyingMvcCore.Data.Repository
                 .Include(c => c.ToDos)
                 .FirstOrDefaultAsync(c => c.Id == id);
         }
+
+        public async Task<Customer> GetCustomerAddress(Guid id)
+        {
+            return await Db.Customers.AsNoTracking()
+                .Include(c => c.Address)
+                .FirstOrDefaultAsync(c => c.Id == id);
+        }
+
+        public async Task<Customer> GetCustomerAdressToDos(Guid id)
+        {
+            return await Db.Customers.AsNoTracking()
+                .Include(c => c.Address)
+                .Include(c => c.ToDos)
+                .FirstOrDefaultAsync(c => c.Id == id);
+        }
     }
 }

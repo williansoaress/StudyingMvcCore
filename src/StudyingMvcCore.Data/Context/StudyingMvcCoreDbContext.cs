@@ -10,6 +10,7 @@ namespace StudyingMvcCore.Data.Context
 
         public DbSet<Customer> Customers { get; set; }
         public DbSet<ToDo> ToDos { get; set; }
+        public DbSet<Address> Addresses { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

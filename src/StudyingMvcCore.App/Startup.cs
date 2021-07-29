@@ -31,7 +31,8 @@ namespace StudyingMvcCore.App
             services.AddDbContext<StudyingMvcCoreDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>();
+            services.AddIdentity<IdentityUser, IdentityRole>()
+                .AddEntityFrameworkStores<ApplicationDbContext>();
 
 
             services.AddAutoMapper(typeof(Startup));
@@ -43,6 +44,7 @@ namespace StudyingMvcCore.App
 
             services.AddScoped<ICustomerRepository, CustomerRepository>();
             services.AddScoped<IToDoRepository, ToDoRepository>();
+            services.AddScoped<IAddressRepository, AddressRepository>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

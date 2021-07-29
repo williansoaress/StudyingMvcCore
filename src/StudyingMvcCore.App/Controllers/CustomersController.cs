@@ -29,7 +29,7 @@ namespace StudyingMvcCore.App.Controllers
 
         public async Task<IActionResult> Details(Guid id)
         {
-            var customerViewModel = await GetCustomerToDos(id);
+            var customerViewModel = await GetCustomerAdressToDos(id);
 
             if (customerViewModel == null)
             {
@@ -108,6 +108,10 @@ namespace StudyingMvcCore.App.Controllers
         {
             return _mapper.Map<CustomerViewModel>(await _customerRepository.GetCustomerToDos(id));
         }
-        
+
+        private async Task<CustomerViewModel> GetCustomerAdressToDos(Guid id)
+        {
+            return _mapper.Map<CustomerViewModel>( await _customerRepository.GetCustomerAdressToDos(id));
+        }
     }
 }

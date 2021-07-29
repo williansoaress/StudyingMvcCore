@@ -24,5 +24,6 @@ namespace StudyingMvcCore.App.ViewModels
 
         /*EF Relation*/
         public IEnumerable<ToDoViewModel> ToDos { get; set; }
+        public AddressViewModel Address { get; set; }
     }
 }
