@@ -13,12 +13,15 @@ namespace StudyingMvcCore.App.Controllers
     public class CustomersController : BaseController
     {
         private readonly ICustomerRepository _customerRepository;
+        private readonly IAddressRepository _addressRepository;
         private readonly IMapper _mapper;
 
         public CustomersController(ICustomerRepository customerRepository,
-                                   IMapper mapper)
+                                   IAddressRepository addressRepository,
+                                   IMapper mapper) 
         {
             _customerRepository = customerRepository;
+            _addressRepository = addressRepository;
             _mapper = mapper;
         }
 
@@ -58,7 +61,7 @@ namespace StudyingMvcCore.App.Controllers
 
         public async Task<IActionResult> Edit(Guid id)
         {
-            var customerViewModel = await GetCustomerToDos(id);
+            var customerViewModel = await GetCustomerAdressToDos(id);
             
             if (customerViewModel == null)
             {
@@ -104,6 +107,39 @@ namespace StudyingMvcCore.App.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        public async Task<IActionResult> UpdateAddress(Guid id)
+        {
+            var customer = await GetCustomerAddress(id);
+
+            if (customer == null) return NotFound();
+
+            return PartialView("_UpdateAddress", new CustomerViewModel { Address = customer.Address });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdateAddress(CustomerViewModel customerViewModel)
+        {
+            ModelState.Remove("Name");
+            ModelState.Remove("Email");
+
+            if (!ModelState.IsValid) return PartialView("_UpdateAddress", customerViewModel);
+
+            await _addressRepository.Update(_mapper.Map<Address>(customerViewModel.Address));
+
+            var url = Url.Action("GetAddress", "Customers", new { id = customerViewModel.Address.CustomerId});
+            return Json(new { success = true, url });
+        }
+
+        public async Task<IActionResult> GetAddress(Guid id)
+        {
+            var customer = await GetCustomerAddress(id);
+
+            if (customer == null) return NotFound();
+
+            return PartialView("_AddressDetails", customer);
+        }
+
         private async Task<CustomerViewModel> GetCustomerToDos(Guid id)
         {
             return _mapper.Map<CustomerViewModel>(await _customerRepository.GetCustomerToDos(id));
@@ -112,6 +148,11 @@ namespace StudyingMvcCore.App.Controllers
         private async Task<CustomerViewModel> GetCustomerAdressToDos(Guid id)
         {
             return _mapper.Map<CustomerViewModel>( await _customerRepository.GetCustomerAdressToDos(id));
+        }
+
+        private async Task<CustomerViewModel> GetCustomerAddress(Guid id)
+        {
+            return _mapper.Map<CustomerViewModel>( await _customerRepository.GetCustomerAddress(id));
         }
     }
 }
