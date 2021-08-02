@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using StudyingMvcCore.App.ViewModels;
 using StudyingMvcCore.Business.Interfaces;
 using StudyingMvcCore.Business.Models;
@@ -13,15 +12,15 @@ namespace StudyingMvcCore.App.Controllers
     public class CustomersController : BaseController
     {
         private readonly ICustomerRepository _customerRepository;
-        private readonly IAddressRepository _addressRepository;
+        private readonly ICustomerService _customerService;
         private readonly IMapper _mapper;
 
         public CustomersController(ICustomerRepository customerRepository,
-                                   IAddressRepository addressRepository,
+                                   ICustomerService customerService,
                                    IMapper mapper) 
         {
             _customerRepository = customerRepository;
-            _addressRepository = addressRepository;
+            _customerService = customerService;
             _mapper = mapper;
         }
 
@@ -54,7 +53,7 @@ namespace StudyingMvcCore.App.Controllers
             if (!ModelState.IsValid) return View(customerViewModel);
 
             var customer = _mapper.Map<Customer>(customerViewModel);
-            await _customerRepository.Add(customer);
+            await _customerService.Add(customer);
 
             return RedirectToAction(nameof(Index));
         }
@@ -80,7 +79,7 @@ namespace StudyingMvcCore.App.Controllers
             if (!ModelState.IsValid) return View(customerViewModel);
 
             var customer = _mapper.Map<Customer>(customerViewModel);
-            await _customerRepository.Update(customer);
+            await _customerService.Update(customer);
 
             return RedirectToAction(nameof(Index));
         }
@@ -102,7 +101,7 @@ namespace StudyingMvcCore.App.Controllers
 
             if (customerViewModel == null) return NotFound();
 
-            await _customerRepository.Remove(id);
+            await _customerService.Remove(id);
 
             return RedirectToAction(nameof(Index));
         }
@@ -125,7 +124,7 @@ namespace StudyingMvcCore.App.Controllers
 
             if (!ModelState.IsValid) return PartialView("_UpdateAddress", customerViewModel);
 
-            await _addressRepository.Update(_mapper.Map<Address>(customerViewModel.Address));
+            await _customerService.UpdateAddress(_mapper.Map<Address>(customerViewModel.Address));
 
             var url = Url.Action("GetAddress", "Customers", new { id = customerViewModel.Address.CustomerId});
             return Json(new { success = true, url });

@@ -12,14 +12,17 @@ namespace StudyingMvcCore.App.Controllers
     public class ToDosController : BaseController
     {
         private readonly IToDoRepository _toDoRepository;
+        private readonly IToDoService _toDoService;
         private readonly ICustomerRepository _customerRepository;
         private readonly IMapper _mapper;
 
         public ToDosController(IToDoRepository toDoRepository,
+                               IToDoService toDoService,
                                ICustomerRepository customerRepository,
                                IMapper mapper)
         {
             _toDoRepository = toDoRepository;
+            _toDoService = toDoService;
             _customerRepository = customerRepository;
             _mapper = mapper;
         }
@@ -33,10 +36,7 @@ namespace StudyingMvcCore.App.Controllers
         {
             var toDoViewModel = await GetToDoCustomer(id);
 
-            if (toDoViewModel == null)
-            {
-                return NotFound();
-            }
+            if (toDoViewModel == null) return NotFound();
 
             return View(toDoViewModel);
         }
@@ -56,7 +56,7 @@ namespace StudyingMvcCore.App.Controllers
             if (!ModelState.IsValid) return View(toDoViewModel);
 
             var toDo = _mapper.Map<ToDo>(toDoViewModel);
-            await _toDoRepository.Add(toDo);
+            await _toDoService.Add(toDo);
 
             return View(toDoViewModel);
         }
@@ -66,6 +66,7 @@ namespace StudyingMvcCore.App.Controllers
             var toDoViewModel = await GetToDoCustomer(id);
             
             if (toDoViewModel == null) return NotFound();
+
             return View(toDoViewModel);
         }
 
@@ -83,7 +84,7 @@ namespace StudyingMvcCore.App.Controllers
             toDoUpdate.Description = toDoViewModel.Description;
             toDoUpdate.DueDate = toDoViewModel.DueDate;
 
-            await _toDoRepository.Update(_mapper.Map<ToDo>(toDoUpdate));
+            await _toDoService.Update(_mapper.Map<ToDo>(toDoUpdate));
 
             return RedirectToAction(nameof(Index));
         }
@@ -92,10 +93,7 @@ namespace StudyingMvcCore.App.Controllers
         {
             var toDoViewModel = await GetToDoCustomer(id);
 
-            if (toDoViewModel == null)
-            {
-                return NotFound();
-            }
+            if (toDoViewModel == null) return NotFound();
 
             return View(toDoViewModel);
         }
@@ -108,7 +106,7 @@ namespace StudyingMvcCore.App.Controllers
 
             if (toDoViewModel == null) return NotFound();
 
-            await _toDoRepository.Remove(id);
+            await _toDoService.Remove(id);
 
             return RedirectToAction(nameof(Index));
         }
