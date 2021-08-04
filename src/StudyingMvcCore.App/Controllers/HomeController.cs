@@ -28,10 +28,35 @@ namespace StudyingMvcCore.App.Controllers
             return View();
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        [Route("Home/Error/{id:length(3,3)}")]
+        public IActionResult Errors(int id)
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            var modelErro = new ErrorViewModel();
+
+            if (id == 500)
+            {
+                modelErro.Message = "Error!";
+                modelErro.Title = "Ocorreu um erro!";
+                modelErro.ErrorCode = id;
+            }
+            else if (id == 404)
+            {
+                modelErro.Message = "The page does not exist!";
+                modelErro.Title = "Page not found!";
+                modelErro.ErrorCode = id;
+            }
+            else if (id == 403)
+            {
+                modelErro.Message = "Your're not allowed to do it.";
+                modelErro.Title = "Access denied!";
+                modelErro.ErrorCode = id;
+            }
+            else
+            {
+                return StatusCode(500);
+            }
+
+            return View("Error", modelErro);
         }
     }
 }
