@@ -55,7 +55,6 @@ namespace StudyingMvcCore.App.Controllers
 
         [ClaimsAuthorize("ToDo", "Add")]
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ToDoViewModel toDoViewModel)
         {
             toDoViewModel = await PopulateCustomers(toDoViewModel);
@@ -80,7 +79,6 @@ namespace StudyingMvcCore.App.Controllers
 
         [ClaimsAuthorize("ToDo", "Updt")]
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Guid id, ToDoViewModel toDoViewModel)
         {
             if (id != toDoViewModel.Id) return NotFound();
@@ -111,7 +109,6 @@ namespace StudyingMvcCore.App.Controllers
 
         [ClaimsAuthorize("ToDo", "Del")]
         [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
             var toDoViewModel = await GetToDoCustomer(id);

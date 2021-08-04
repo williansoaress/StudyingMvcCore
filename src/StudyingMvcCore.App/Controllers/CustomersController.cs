@@ -53,7 +53,6 @@ namespace StudyingMvcCore.App.Controllers
 
         [ClaimsAuthorize("Customer", "Add")]
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CustomerViewModel customerViewModel)
         {
             if (!ModelState.IsValid) return View(customerViewModel);
@@ -79,7 +78,6 @@ namespace StudyingMvcCore.App.Controllers
 
         [ClaimsAuthorize("Customer", "Updt")]
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Guid id, CustomerViewModel customerViewModel)
         {
             if (id != customerViewModel.Id) return NotFound();
@@ -104,7 +102,6 @@ namespace StudyingMvcCore.App.Controllers
 
         [ClaimsAuthorize("Customer", "Del")]
         [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
             var customerViewModel = await GetCustomerToDos(id);
@@ -128,7 +125,6 @@ namespace StudyingMvcCore.App.Controllers
 
         [ClaimsAuthorize("Customer", "Updt")]
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateAddress(CustomerViewModel customerViewModel)
         {
             ModelState.Remove("Name");
