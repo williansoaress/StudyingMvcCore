@@ -1,4 +1,5 @@
-﻿@model IEnumerable<StudyingMvcCore.App.ViewModels.CustomerViewModel>
+﻿@using StudyingMvcCore.App.Extensions;
+@model IEnumerable<StudyingMvcCore.App.ViewModels.CustomerViewModel>
 
 @{
     ViewData["Title"] = "Customers";
@@ -7,7 +8,7 @@
 <h1>@ViewData["Title"]</h1>
 
 <p>
-    <a class="btn btn-dark" asp-action="Create">Create New</a>
+    <a supress-by-claim-name="Customer" supress-by-claim-value="Add" class="btn btn-dark" asp-action="Create">Create New</a>
 </p>
 <table class="table table-hover">
     <thead class="thead-dark">
@@ -38,8 +39,8 @@
             </td>
             <td class="text-right">
                 <a class="btn btn-info" asp-action="Details" asp-route-id="@item.Id">Details</a> 
-                <a class="btn btn-warning" asp-action="Edit" asp-route-id="@item.Id">Edit</a> 
-                <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                <a class="btn btn-warning" disable-by-claim-name="Customer" disable-by-claim-value="Updt"  asp-action="Edit" asp-route-id="@item.Id">Edit</a> 
+                <a class="btn btn-danger"  supress-by-claim-name="Customer" supress-by-claim-value="Del" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
             </td>
         </tr>
 }

@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using StudyingMvcCore.App.Extensions;
 using StudyingMvcCore.App.ViewModels;
 using StudyingMvcCore.Business.Interfaces;
 using StudyingMvcCore.Business.Models;
@@ -24,11 +26,13 @@ namespace StudyingMvcCore.App.Controllers
             _mapper = mapper;
         }
 
+        [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
             return View(_mapper.Map<IEnumerable<CustomerViewModel>>(await _customerRepository.GetAll()));
         }
 
+        [AllowAnonymous]
         public async Task<IActionResult> Details(Guid id)
         {
             var customerViewModel = await GetCustomerAdressToDos(id);
@@ -41,11 +45,13 @@ namespace StudyingMvcCore.App.Controllers
             return View(customerViewModel);
         }
 
+        [ClaimsAuthorize("Customer", "Add")]
         public IActionResult Create()
         {
             return View();
         }
 
+        [ClaimsAuthorize("Customer", "Add")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CustomerViewModel customerViewModel)
@@ -58,6 +64,7 @@ namespace StudyingMvcCore.App.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [ClaimsAuthorize("Customer", "Updt")]
         public async Task<IActionResult> Edit(Guid id)
         {
             var customerViewModel = await GetCustomerAdressToDos(id);
@@ -70,6 +77,7 @@ namespace StudyingMvcCore.App.Controllers
             return View(customerViewModel);
         }
 
+        [ClaimsAuthorize("Customer", "Updt")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Guid id, CustomerViewModel customerViewModel)
@@ -84,6 +92,7 @@ namespace StudyingMvcCore.App.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [ClaimsAuthorize("Customer", "Del")]
         public async Task<IActionResult> Delete(Guid id)
         {
             var customerViewModel = await GetCustomerToDos(id);
@@ -93,6 +102,7 @@ namespace StudyingMvcCore.App.Controllers
             return View(customerViewModel);
         }
 
+        [ClaimsAuthorize("Customer", "Del")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
@@ -106,6 +116,7 @@ namespace StudyingMvcCore.App.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [ClaimsAuthorize("Customer", "Updt")]
         public async Task<IActionResult> UpdateAddress(Guid id)
         {
             var customer = await GetCustomerAddress(id);
@@ -115,6 +126,7 @@ namespace StudyingMvcCore.App.Controllers
             return PartialView("_UpdateAddress", new CustomerViewModel { Address = customer.Address });
         }
 
+        [ClaimsAuthorize("Customer", "Updt")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateAddress(CustomerViewModel customerViewModel)
@@ -130,6 +142,7 @@ namespace StudyingMvcCore.App.Controllers
             return Json(new { success = true, url });
         }
 
+        [AllowAnonymous]
         public async Task<IActionResult> GetAddress(Guid id)
         {
             var customer = await GetCustomerAddress(id);

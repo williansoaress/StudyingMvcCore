@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using StudyingMvcCore.App.Extensions;
 using StudyingMvcCore.App.ViewModels;
 using StudyingMvcCore.Business.Interfaces;
 using StudyingMvcCore.Business.Models;
@@ -27,11 +29,13 @@ namespace StudyingMvcCore.App.Controllers
             _mapper = mapper;
         }
 
+        [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
             return View(await GetToDosCustomers());
         }
 
+        [AllowAnonymous]
         public async Task<IActionResult> Details(Guid id)
         {
             var toDoViewModel = await GetToDoCustomer(id);
@@ -41,6 +45,7 @@ namespace StudyingMvcCore.App.Controllers
             return View(toDoViewModel);
         }
 
+        [ClaimsAuthorize("ToDo", "Add")]
         public async Task<IActionResult> Create()
         {
             var todoViewModel = await PopulateCustomers(new ToDoViewModel());
@@ -48,6 +53,7 @@ namespace StudyingMvcCore.App.Controllers
             return View(todoViewModel);
         }
 
+        [ClaimsAuthorize("ToDo", "Add")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ToDoViewModel toDoViewModel)
@@ -61,6 +67,8 @@ namespace StudyingMvcCore.App.Controllers
             return View(toDoViewModel);
         }
 
+
+        [ClaimsAuthorize("ToDo", "Updt")]
         public async Task<IActionResult> Edit(Guid id)
         {
             var toDoViewModel = await GetToDoCustomer(id);
@@ -70,6 +78,7 @@ namespace StudyingMvcCore.App.Controllers
             return View(toDoViewModel);
         }
 
+        [ClaimsAuthorize("ToDo", "Updt")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Guid id, ToDoViewModel toDoViewModel)
@@ -89,6 +98,8 @@ namespace StudyingMvcCore.App.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+
+        [ClaimsAuthorize("ToDo", "Del")]
         public async Task<IActionResult> Delete(Guid id)
         {
             var toDoViewModel = await GetToDoCustomer(id);
@@ -98,6 +109,7 @@ namespace StudyingMvcCore.App.Controllers
             return View(toDoViewModel);
         }
 
+        [ClaimsAuthorize("ToDo", "Del")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
